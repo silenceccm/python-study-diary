@@ -1,0 +1,44 @@
+#encoding:utf8
+#原始字符串，将最大前后缀的匹配值放入列表中，并返回列表，下面在kmp函数中会用到
+def next(pattern):
+        p_len = len(pattern)
+        pos = [-1]*p_len
+        j = -1
+        for i in range(1, p_len):
+                #有 for 循环将j值一一赋给列表
+                #执行顺序2 12 12
+                #如果要想S字符串匹配的话，必须有S【1：】也匹配，即只有在匹配了一个字符后
+                #才能够有第二个字符能匹配。只有在小字符串中匹配才有大字符串匹配。
+                #   w  e      r       t       y         u            i 
+                #a as asd asdf asdfa asdfas asdfasd asdfasda
+                #   -1  -1   -1      0      1         2           0              0代表有一个字符能匹配
+                #当我们有asdfa即t时，我们只需要判断t的第二个字符是否与t新增加的字符相等，后面的依次类推，这样
+                #我们只需比较一个字符即可，不必将整个字符创全部比较。
+                #当i字符串出现时，u[3]!=i[max],此时i为：asd f  asd  a ，我们要比较asd与sda，如果asd与sda不等，继续比较as与da，
+                #还是不相等的话，继续比较 a与 a。这就相当于查看asd是否有前后缀匹配，asd的匹配值在一开始我们已经得到了，此时
+                #可以直接去前面查询，通过查看pos【j】即可。
+                while j > -1 and pattern[j+1] != pattern[i]:#1
+                        j = pos[j]
+                if pattern[j+1] == pattern[i]:#2
+                         j = j + 1
+                pos[i] = j
+        return pos
+def kmp(ss, pattern):
+                pos = next(pattern)
+                ss_len = len(ss)
+                pattern_len = len(pattern)
+                j = -1
+                for i in range(ss_len):
+                        
+                        while j > -1 and pattern[j+1] != ss[i]:
+                               
+                                j = pos[j]
+                        if pattern[j+1] == ss[i]:
+                                        
+                                j = j + 1
+                        if j == pattern_len-1:
+                                print 'matched @: %d' %(i-pattern_len+1)
+                                j = pos[j]
+                                
+kmp('sdfdsasdfdsdfdsfdsfdsffdsfu','sdfds') 
+
